@@ -39,8 +39,19 @@ class UserController extends Controller
         }
     }
 
-    public function getUserDetail(){
-        
+    public function getUserDetail(Request $request, $id){
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
+                return $this->sendError('User not found', 404, '404 Not Found');
+            }
+
+            return $this->sendSuccess('Get User Detail Success', $user);
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500, '500 Internal Server Error');
+        }
     }
 
 }
