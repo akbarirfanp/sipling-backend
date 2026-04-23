@@ -29,8 +29,17 @@ class UserController extends Controller
         return $this->sendSuccess('User berhasil dibuat.', $user);
     }
 
-    public function deleteUser(){
+    public function deleteUser($id)
+    {
+        $user = User::find($id);
 
+        if (!$user) {
+            return $this->sendError('User tidak ditemukan.', 404);
+        }
+
+        $user->delete();
+
+        return $this->sendSuccess('User berhasil dihapus.');
     }
 
     public function updateUser(){

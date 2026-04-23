@@ -8,4 +8,5 @@ Route::group(['prefix' => '/users'], function() {
     Route::get('/', [UserController::class, 'getAllUser']);
     Route::get('/{id?}', [UserController::class, 'getUserDetail']);
     Route::put('/{id}', [UserController::class, 'updateUser']);
+    Route::delete('/{id}', [UserController::class, 'deleteUser']);
 });
