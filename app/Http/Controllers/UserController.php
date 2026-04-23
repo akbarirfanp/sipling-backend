@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Traits\ResponseAPI;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+
 
 class UserController extends Controller
 {
@@ -42,8 +44,31 @@ class UserController extends Controller
         return $this->sendSuccess('User berhasil dihapus.');
     }
 
-    public function updateUser(){
+    public function updateUser(UpdateUserRequest $request, $id)
+    {
+        try {
+            $user = User::find($id);
 
+            if (!$user) {
+                return $this->sendError('User tidak ditemukan.', 404, '404 Not Found');
+            }
+
+            $user->update([
+                'name'       => $request->name ?? $user->name,
+                'username'   => $request->username ?? $user->username,
+                'address'    => $request->address ?? $user->address,
+                'gender'     => $request->gender ?? $user->gender,
+                'role'       => $request->role ?? $user->role,
+                'email'      => $request->email ?? $user->email,
+                'password'   => $request->password ? bcrypt($request->password) : $user->password,
+                'updated_at' => now(),
+            ]);
+
+            return $this->sendSuccess('User berhasil diupdate.', $user->fresh());
+
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage(), 500, '500 Internal Server Error');
+        }
     }
 
     public function getAllUser(Request $request){
