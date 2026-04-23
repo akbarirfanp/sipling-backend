@@ -5,13 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Traits\ResponseAPI;
+use App\Http\Requests\CreateUserRequest;
 
 class UserController extends Controller
 {
     use ResponseAPI;
 
-    public function createUser(){
+    public function createUser(CreateUserRequest $request)
+    {
+        $user = User::create([
+            'name'       => $request->name,
+            'username'   => $request->username,
+            'address'    => $request->address,
+            'gender'     => $request->gender,
+            'role'       => $request->role,
+            'email'      => $request->email,
+            'password'   => bcrypt($request->password),
+            'created_by' => auth()->id(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
+        return $this->sendSuccess('User berhasil dibuat.', $user);
     }
 
     public function deleteUser(){
