@@ -24,6 +24,7 @@ class UpdateUserRequest extends FormRequest
             'role'     => ['sometimes', 'in:warga,admin'],
             'email'    => ['sometimes', 'email', 'unique:users,email,' . $userId],
             'password' => ['sometimes', 'string', 'min:8', 'regex:/^(?=.*[A-Z])(?=.*\d).+$/'],
+            'status' => ['sometimes', 'boolean',]
         ];
     }
 

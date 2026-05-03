@@ -9,7 +9,7 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 
 
-class UserController extends Controller
+class UserController
 {
     use ResponseAPI;
 
@@ -20,7 +20,7 @@ class UserController extends Controller
             'username'   => $request->username,
             'address'    => $request->address,
             'gender'     => $request->gender,
-            'role'       => $request->role,
+            'role_id'       => $request->role_id,
             'email'      => $request->email,
             'password'   => bcrypt($request->password),
             'created_by' => auth()->id(),
