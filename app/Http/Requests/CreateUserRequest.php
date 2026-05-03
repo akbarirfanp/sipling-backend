@@ -7,17 +7,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateUserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -26,8 +21,9 @@ class CreateUserRequest extends FormRequest
             'name'     => ['required', 'string', 'min:5', 'max:50', 'regex:/^[a-zA-Z\s]+$/'],
             'username' => ['required', 'string', 'min:5', 'max:20', 'unique:users,username'],
             'address'  => ['required', 'string'],
+            'status'   => ['required', 'boolean'],
             'gender'   => ['required', 'in:male,female'],
-            'role'     => ['required', 'in:warga,admin'],
+            'role_id'  => ['required', 'uuid', 'exists:roles,id'], // ← diubah
             'email'    => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[A-Z])(?=.*\d).+$/'],
         ];
@@ -51,8 +47,9 @@ class CreateUserRequest extends FormRequest
             'gender.required'   => 'Gender wajib diisi.',
             'gender.in'         => 'Gender harus male atau female.',
 
-            'role.required'     => 'Role wajib diisi.',
-            'role.in'           => 'Role harus warga atau admin.',
+            'role_id.required'  => 'Role wajib diisi.',
+            'role_id.uuid'      => 'Format role tidak valid.',  
+            'role_id.exists'    => 'Role tidak ditemukan.',     
 
             'email.required'    => 'Email wajib diisi.',
             'email.email'       => 'Format email tidak valid.',

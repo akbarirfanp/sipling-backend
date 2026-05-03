@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 
 /*
@@ -16,7 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/v1'], function() {
     Route::prefix('/sipling')->group(function() {
-        require base_path('routes/route.php');
+
+        Route::post('/login', [AuthController::class, 'login']);
+
+        Route::middleware('auth:api')->group(function() { 
+            require base_path('routes/route.php');
+        });
     });
 });
 
