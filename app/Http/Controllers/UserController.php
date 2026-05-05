@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Traits\ResponseAPI;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-
+use Illuminate\Support\Str;
 
 class UserController
 {
@@ -16,6 +16,7 @@ class UserController
     public function createUser(CreateUserRequest $request)
     {
         $user = User::create([
+            'id'        =>  Str::uuid(),
             'name'       => $request->name,
             'username'   => $request->username,
             'address'    => $request->address,
@@ -71,16 +72,36 @@ class UserController
         }
     }
 
-    public function getAllUser(Request $request){
+    public function getAllUser(Request $request)
+    {
         try {
-            $currentPage = $request->query('page', 1);
-            $users = User::paginate(10, ['*'], 'page', $currentPage);
+            $page      = $request->query('page', 1);
+            $pageSize  = $request->query('page_size', 10);
+            $search    = $request->query('search', '');
+            $sortBy    = $request->query('sort_by', 'created_at');
+            $sortOrder = $request->query('sort_order', 'desc');
+
+            $query = User::query();
+
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+                });
+            }
+
+            $allowedSortBy = ['name', 'email', 'created_at'];
+            $sortBy    = in_array($sortBy, $allowedSortBy) ? $sortBy : 'created_at';
+            $sortOrder = strtolower($sortOrder) === 'asc' ? 'asc' : 'desc';
+            $query->orderBy($sortBy, $sortOrder);
+
+            $users = $query->paginate($pageSize, ['*'], 'page', $page);
 
             if ($users->isEmpty()) {
                 return $this->sendError('No users found', 404, '404 Not Found');
             }
 
-            $data = $this->PaginatedResponse($users, $currentPage);
+            $data = $this->PaginatedResponse($users, $page);
             return $this->sendSuccess('Get All User Success', $data);
 
         } catch (\Exception $e) {
