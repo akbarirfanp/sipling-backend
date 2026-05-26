@@ -15,12 +15,12 @@ class User extends Authenticatable implements JWTSubject
     public $incrementing = false;
 
     protected $fillable = [
-        'name', 'username', 'address', 'gender',
+        'id', 'name', 'username', 'address',
         'status', 'role_id', 'email', 'password',
-        'created_at', 'created_by'
+        'created_at'
     ];
 
-    protected $hidden = ['password', 'remember_token'];
+    protected $hidden = ['password', 'remember_token', 'role_id'];
 
     protected function casts(): array
     {

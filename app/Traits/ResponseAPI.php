@@ -108,10 +108,13 @@ trait ResponseAPI
         $nextPage = ($data->hasMorePages()) ? $currentPage + 1 : null;
         
         return [
-            'prevPage' => $prevPage,
-            'nextPage' => $nextPage,
-            'isLast' => $isLastPage,
-            'data' => $data->items()
+            'prevPage'  => $prevPage,
+            'nextPage'  => $nextPage,
+            'isLast'    => $isLastPage,
+            'total'     => $data->total(),
+            'page'      => (int) $currentPage,
+            'pageSize'  => $data->perPage(),
+            'items'      => $data->items()
         ];
     }
 

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Traits\ResponseAPI;
 use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Str;
 
 class UserController
@@ -20,7 +19,7 @@ class UserController
             'name'       => $request->name,
             'username'   => $request->username,
             'address'    => $request->address,
-            'gender'     => $request->gender,
+            'status'     => $request->status,
             'role_id'       => $request->role_id,
             'email'      => $request->email,
             'password'   => bcrypt($request->password),
@@ -58,8 +57,8 @@ class UserController
                 'name'       => $request->name ?? $user->name,
                 'username'   => $request->username ?? $user->username,
                 'address'    => $request->address ?? $user->address,
-                'gender'     => $request->gender ?? $user->gender,
-                'role'       => $request->role ?? $user->role,
+                'status'     => $request->status ?? $user->status,
+                'role_id'    => $request->role_id ?? $user->role_id,
                 'email'      => $request->email ?? $user->email,
                 'password'   => $request->password ? bcrypt($request->password) : $user->password,
                 'updated_at' => now(),
@@ -81,7 +80,7 @@ class UserController
             $sortBy    = $request->query('sort_by', 'created_at');
             $sortOrder = $request->query('sort_order', 'desc');
 
-            $query = User::query();
+            $query = User::with('roles');
 
             if ($search) {
                 $query->where(function ($q) use ($search) {
@@ -111,8 +110,8 @@ class UserController
 
     public function getUserDetail(Request $request, $id){
         try {
-            $user = User::find($id);
-
+            $user = User::with('roles')->find($id);
+            
             if (!$user) {
                 return $this->sendError('User not found', 404, '404 Not Found');
             }
@@ -122,6 +121,22 @@ class UserController
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500, '500 Internal Server Error');
         }
+    }
+
+    public function changePassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::findOrFail($id);
+
+        $user->update([
+            'password' => bcrypt($request->input('password')),
+            'updated_at' => now(),
+        ]);
+
+        return $this->sendSuccess('Password changed successfully');
     }
 
 }

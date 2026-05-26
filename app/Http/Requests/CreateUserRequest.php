@@ -22,7 +22,7 @@ class CreateUserRequest extends FormRequest
             'username' => ['required', 'string', 'min:5', 'max:20', 'unique:users,username'],
             'address'  => ['required', 'string'],
             'status'   => ['required', 'boolean'],
-            'gender'   => ['required', 'in:male,female'],
+            // 'gender'   => ['required', 'in:Pria,Wanita'],
             'role_id'  => ['required', 'uuid', 'exists:roles,id'], // ← diubah
             'email'    => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'regex:/^(?=.*[A-Z])(?=.*\d).+$/'],
@@ -44,8 +44,8 @@ class CreateUserRequest extends FormRequest
 
             'address.required'  => 'Alamat wajib diisi.',
 
-            'gender.required'   => 'Gender wajib diisi.',
-            'gender.in'         => 'Gender harus male atau female.',
+            // 'gender.required'   => 'Gender wajib diisi.',
+            // 'gender.in'         => 'Gender harus male atau female.',
 
             'role_id.required'  => 'Role wajib diisi.',
             'role_id.uuid'      => 'Format role tidak valid.',  
