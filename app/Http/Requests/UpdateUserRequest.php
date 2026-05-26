@@ -20,11 +20,10 @@ class UpdateUserRequest extends FormRequest
             'name'     => ['sometimes', 'string', 'min:5', 'max:50', 'regex:/^[a-zA-Z\s]+$/'],
             'username' => ['sometimes', 'string', 'min:5', 'max:20', 'unique:users,username,' . $userId],
             'address'  => ['sometimes', 'string'],
-            'gender'   => ['sometimes', 'in:male,female'],
-            'role'     => ['sometimes', 'in:warga,admin'],
+            'role_id'  => ['sometimes', 'in:warga,admin'],
             'email'    => ['sometimes', 'email', 'unique:users,email,' . $userId],
             'password' => ['sometimes', 'string', 'min:8', 'regex:/^(?=.*[A-Z])(?=.*\d).+$/'],
-            'status' => ['sometimes', 'boolean',]
+            'status'   => ['sometimes', 'boolean'],
         ];
     }
 
@@ -37,7 +36,7 @@ class UpdateUserRequest extends FormRequest
             'username.min'  => 'Username minimal 5 karakter.',
             'username.max'  => 'Username maksimal 20 karakter.',
             'username.unique' => 'Username sudah dipakai.',
-            'gender.in'     => 'Gender harus male atau female.',
+            // 'gender.in'     => 'Gender harus male atau female.',
             'role.in'       => 'Role harus warga atau admin.',
             'email.email'   => 'Format email tidak valid.',
             'email.unique'  => 'Email sudah terdaftar.',

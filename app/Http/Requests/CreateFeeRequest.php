@@ -26,7 +26,7 @@ class CreateFeeRequest extends FormRequest
             'name'        => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:255'],
             'amount'      => ['required', 'integer', 'min:0'],
-            'period'      => ['required', 'in:bulanan,tahunan,mingguan'],
+            'period'      => ['required', 'in:Bulanan,Tahunan,Mingguan'],
         ];
     }
 
@@ -39,7 +39,7 @@ class CreateFeeRequest extends FormRequest
             'amount.integer'        => 'Jumlah iuran harus berupa angka bulat.',
             'amount.min'            => 'Jumlah iuran tidak boleh negatif.',
             'period.required'       => 'Periode wajib diisi.',
-            'period.in'             => 'Periode hanya boleh: monthly, yearly, atau weekly.',
+            'period.in'             => 'Periode hanya boleh: Bulanan, Tahunan, Mingguan',
         ];
     }
 }

@@ -26,7 +26,7 @@ class UpdateFeeRequest extends FormRequest
             'name'     => ['sometimes', 'string', 'max:255'],
             'description' => ['sometimes', 'string', 'max:255'],
             'amount'  => ['sometimes', 'integer', 'min:0'],
-            'period'   => ['sometimes', 'in:bulanan,tahunan,mingguan'],
+            'period'   => ['sometimes', 'in:Bulanan,Tahunan,Mingguan'],
         ];
     }
 }
