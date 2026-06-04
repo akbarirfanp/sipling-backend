@@ -20,7 +20,7 @@ class UpdateUserRequest extends FormRequest
             'name'     => ['sometimes', 'string', 'min:5', 'max:50', 'regex:/^[a-zA-Z\s]+$/'],
             'username' => ['sometimes', 'string', 'min:5', 'max:20', 'unique:users,username,' . $userId],
             'address'  => ['sometimes', 'string'],
-            'role_id'  => ['sometimes', 'in:warga,admin'],
+            'role_id'  => ['sometimes', 'exists:roles,id'],
             'email'    => ['sometimes', 'email', 'unique:users,email,' . $userId],
             'password' => ['sometimes', 'string', 'min:8', 'regex:/^(?=.*[A-Z])(?=.*\d).+$/'],
             'status'   => ['sometimes', 'boolean'],

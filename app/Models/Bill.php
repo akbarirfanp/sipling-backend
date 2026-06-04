@@ -21,6 +21,7 @@ class Bill extends Model
         'gross_amount',
         'status',
         'due_date',
+        'fee_id',
     ];
 
     public function user(): BelongsTo
@@ -28,14 +29,14 @@ class Bill extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function billDetails(): HasMany
-    {
-        return $this->hasMany(BillDetail::class);
-    }
-
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function fee(): BelongsTo
+    {
+        return $this->belongsTo(Fee::class);
     }
     
     /**
