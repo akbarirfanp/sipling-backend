@@ -34,12 +34,11 @@ class DashboardController
         try {
             $page     = $request->query('page', 1);
             $pageSize = $request->query('page_size', 10);
-
+    
             $recentActivity = Payment::query()
                 ->join('bills', 'payments.bill_id', '=', 'bills.id')
                 ->join('users', 'bills.user_id', '=', 'users.id')
-                ->join('bill_details', 'bills.id', '=', 'bill_details.bill_id')
-                ->join('fees', 'bill_details.fee_id', '=', 'fees.id')
+                ->join('fees', 'bills.fee_id', '=', 'fees.id')
                 ->where('payments.status', 'success')
                 ->orderBy('payments.payment_date', 'desc')
                 ->paginate($pageSize, [
@@ -53,11 +52,11 @@ class DashboardController
                     'fees.id as fee_id',
                     'fees.name as fee_name',
                 ], 'page', $page);
-
+    
             $data = $this->PaginatedResponse($recentActivity, $page);
-
+    
             return $this->sendSuccess('Berhasil mengambil recent activity', $data);
-
+    
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500, '500 Internal Server Error');
         }
@@ -70,17 +69,16 @@ class DashboardController
                 'start_date' => ['required', 'date', 'date_format:Y-m-d'],
                 'end_date'   => ['required', 'date', 'date_format:Y-m-d', 'after_or_equal:start_date'],
             ]);
- 
+
             $page      = $request->query('page', 1);
             $pageSize  = $request->query('page_size', 10);
             $startDate = Carbon::parse($request->start_date)->startOfDay();
             $endDate   = Carbon::parse($request->end_date)->endOfDay();
- 
+
             $payments = Payment::query()
                 ->join('bills', 'payments.bill_id', '=', 'bills.id')
                 ->join('users', 'bills.user_id', '=', 'users.id')
-                ->join('bill_details', 'bills.id', '=', 'bill_details.bill_id')
-                ->join('fees', 'bill_details.fee_id', '=', 'fees.id')
+                ->join('fees', 'bills.fee_id', '=', 'fees.id')
                 ->where('payments.status', 'success')
                 ->whereBetween('payments.payment_date', [$startDate, $endDate])
                 ->orderBy('users.name', 'asc')
@@ -92,15 +90,15 @@ class DashboardController
                     'users.name as user_name',
                     'fees.name as fee_name',
                 ], 'page', $page);
- 
+
             if ($payments->isEmpty()) {
                 return $this->sendError('Data tidak ditemukan', 404, '404 Not Found');
             }
- 
+
             $data = $this->PaginatedResponse($payments, $page);
- 
+
             return $this->sendSuccess('Berhasil mengambil data report', $data);
- 
+
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage(), 500, '500 Internal Server Error');
         }

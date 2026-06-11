@@ -46,7 +46,7 @@ class AuthController extends Controller
                     'email'    => $user->email,
                     'roles'    => $user->roles,
                 ],
-                'expired_at' => Carbon::now()->addMinutes(config('jwt.ttl'))->timestamp,
+                'expired_at' => Carbon::now()->addMinutes((int) config('jwt.ttl'))->timestamp,
                 'token'      => $token,
             ];
 
